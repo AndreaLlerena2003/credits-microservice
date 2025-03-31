@@ -1,0 +1,217 @@
+openapi: 3.0.3
+info:
+  title: API de Sistema de Créditos
+  description: API para gestionar créditos de diferentes tipos
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+    description: Servidor principal
+paths:
+  /credits:
+    get:
+      summary: Obtiene todos los créditos
+      responses:
+        '200':
+          description: Lista de créditos obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditBase'
+    post:
+      summary: Crea un nuevo crédito
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditBase'
+      responses:
+        '201':
+          description: Crédito creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditBase'
+
+  /credits/{creditId}:
+    put:
+      summary: Actualiza un crédito existente
+      parameters:
+        - name: creditId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditBase'
+      responses:
+        '200':
+          description: Crédito actualizado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditBase'
+    get:
+      summary: Obtiene un crédito por su ID
+      parameters:
+        - name: creditId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Crédito obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditBase'
+
+  /credits/transactions:
+    post:
+      summary: Registrar una nueva transacción en la cuenta
+      operationId: createTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '201':
+          description: Transacción registrada exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+
+    get:
+      summary: Obtener todas las transacciones
+      operationId: getAllTransactions
+      responses:
+        '200':
+          description: Historial completo de transacciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+
+  /credits/{creditId}/transactions:
+    get:
+      summary: Obtener transacciones por ID de crédito
+      description: Recupera todas las transacciones asociadas a un crédito específico
+      operationId: getTransactionsByCreditId
+      parameters:
+        - name: creditId
+          in: path
+          description: ID del crédito del cual se desean obtener las transacciones
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de transacciones obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '404':
+          description: Crédito no encontrado
+        '400':
+          description: Solicitud incorrecta
+        '500':
+          description: Error interno del servidor
+
+components:
+  schemas:
+    Transaction:
+      type: object
+      required:
+        - type
+        - amount
+        - creditId
+      properties:
+        transactionId:
+          type: string
+        date:
+          type: string
+          format: date-time
+        type:
+          type: string
+          enum:
+            - payment
+            - spent
+          example: "spent"
+        amount:
+          type: number
+          format: double
+        creditId:
+          type: string
+    CreditType:
+      type: string
+      enum:
+        - CreditCard
+        - SimpleCredit
+    CustomerType:
+      type: string
+      enum:
+        - personal
+        - business
+    CreditBase:
+      type: object
+      required:
+        - customerId
+        - customerType
+        - amount
+        - type
+      properties:
+        creditId:
+          type: string
+          description: Identificador único del crédito
+        customerId:
+          type: string
+          description: Identificador único del cliente
+        customerType:
+          $ref: '#/components/schemas/CustomerType'
+        amount:
+          type: number
+          format: double
+          description: Monto del crédito
+        type:
+          $ref: '#/components/schemas/CreditType'
+      discriminator:
+        propertyName: type
+        mapping:
+          CreditCard: '#/components/schemas/CreditCard'
+          SimpleCredit: '#/components/schemas/SimpleCredit'
+    CreditCard:
+      allOf:
+        - $ref: '#/components/schemas/CreditBase'
+        - type: object
+          required:
+            - cardNumber
+          properties:
+            cardNumber:
+              type: string
+              description: Número de la tarjeta de crédito
+            availableCredit:
+              type: number
+              format: double
+              description: Crédito disponible
+    SimpleCredit:
+      allOf:
+        - $ref: '#/components/schemas/CreditBase'
+        - type: object
+          properties:
+            amountPaid:
+              type: number
+              format: double
+              description: Monto pagado del crédito
