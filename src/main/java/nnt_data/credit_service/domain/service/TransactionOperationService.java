@@ -1,7 +1,7 @@
-package nnt_data.credit_service.infrastructure.service;
+package nnt_data.credit_service.domain.service;
 
 import lombok.RequiredArgsConstructor;
-import nnt_data.credit_service.domain.port.TransactionOperationsPort;
+import nnt_data.credit_service.application.port.TransactionOperationsPort;
 import nnt_data.credit_service.domain.validator.ValidatorFactory;
 import nnt_data.credit_service.infrastructure.persistence.mapper.TransactionMapper;
 import nnt_data.credit_service.infrastructure.persistence.repository.CreditRepository;

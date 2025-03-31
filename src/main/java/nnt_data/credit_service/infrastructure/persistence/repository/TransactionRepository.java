@@ -1,6 +1,6 @@
 package nnt_data.credit_service.infrastructure.persistence.repository;
 
-import nnt_data.credit_service.infrastructure.persistence.model.TransactionEntity;
+import nnt_data.credit_service.infrastructure.persistence.entity.TransactionEntity;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Flux;
 

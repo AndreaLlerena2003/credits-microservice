@@ -1,7 +1,7 @@
 package nnt_data.credit_service.domain.validator;
 
 import lombok.RequiredArgsConstructor;
-import nnt_data.credit_service.infrastructure.persistence.model.CreditBaseEntity;
+import nnt_data.credit_service.infrastructure.persistence.entity.CreditBaseEntity;
 import nnt_data.credit_service.infrastructure.persistence.repository.CreditRepository;
 import nnt_data.credit_service.model.Transaction;
 import org.springframework.stereotype.Component;
@@ -33,8 +33,7 @@ public class CreditTransactionValidator implements TransactionValidator{
         if (newAvailableCredit < 0) {
             return Mono.error(new IllegalArgumentException("Crédito disponible insuficiente"));
         }
-        credit.setAvailableCredit(newAvailableCredit);
-        return creditRepository.save(credit)
+        return creditRepository.updateAvilableAmountByCreditId(credit.getCreditId(), newAvailableCredit)
                 .thenReturn(transaction);
     }
 

@@ -1,7 +1,8 @@
-package nnt_data.credit_service.infrastructure.service;
+package nnt_data.credit_service.domain.service;
 
 import nnt_data.credit_service.application.usecase.CreditCreationStrategy;
-import nnt_data.credit_service.domain.port.CreditOperationsPort;
+import nnt_data.credit_service.application.port.CreditOperationsPort;
+import nnt_data.credit_service.application.usecase.UpdateCreationStrategy;
 import nnt_data.credit_service.infrastructure.persistence.mapper.CreditMapper;
 import nnt_data.credit_service.infrastructure.persistence.repository.CreditRepository;
 import nnt_data.credit_service.model.CreditBase;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class CreditOperationsService implements CreditOperationsPort {
 
     private final Map<CustomerType, CreditCreationStrategy> creationStrategies;
+    private final Map<CustomerType, UpdateCreationStrategy> updateStrategies;
     private final CreditRepository creditRepository;
     private final CreditMapper creditMapper;
 
@@ -32,7 +34,7 @@ public class CreditOperationsService implements CreditOperationsPort {
                     return creditRepository.findById(creditId)
                             .switchIfEmpty(Mono.error(new IllegalArgumentException("No existe un crédito con el ID: " + c.getCreditId())));
                 })
-                .then(executeCreationStrategy(credit))
+                .then(executeUpdateStrategy(credit))
                 .flatMap(this::saveAccount);
     }
 
@@ -51,8 +53,10 @@ public class CreditOperationsService implements CreditOperationsPort {
 
     public CreditOperationsService(Map<CustomerType, CreditCreationStrategy> creationStrategies,
                                     CreditRepository creditRepository,
-                                    CreditMapper creditMapper) {
+                                    CreditMapper creditMapper,
+                                   Map<CustomerType, UpdateCreationStrategy> updateStrategies) {
         this.creationStrategies = creationStrategies;
+        this.updateStrategies = updateStrategies;
         this.creditRepository = creditRepository;
         this.creditMapper = creditMapper;
     }
@@ -65,6 +69,16 @@ public class CreditOperationsService implements CreditOperationsPort {
                         .switchIfEmpty(Mono.error(
                                 new IllegalArgumentException("Tipo de cliente no soportado: " + acc.getCustomerType())))
                         .flatMap(strategy -> strategy.createCredit(acc)));
+    }
+
+    private Mono<CreditBase> executeUpdateStrategy(CreditBase creditBase) {
+        return Mono.just(creditBase)
+                .filter(acc -> acc.getCustomerType() != null)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("El tipo de cliente no puede ser null")))
+                .flatMap(acc -> Mono.justOrEmpty(updateStrategies.get(acc.getCustomerType()))
+                        .switchIfEmpty(Mono.error(
+                                new IllegalArgumentException("Tipo de cliente no soportado: " + acc.getCustomerType())))
+                        .flatMap(strategy -> strategy.updateCredit(acc)));
     }
 
     private Mono<CreditBase> saveAccount(CreditBase creditBase) {

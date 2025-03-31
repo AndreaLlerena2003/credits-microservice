@@ -40,10 +40,9 @@ public class SimpleTransactionValidator implements TransactionValidator {
                             return Mono.error(new IllegalArgumentException("El crédito ya está pagado en su totalidad"));
                         }
 
-                        credit.setAmountPaid(newAmountPaid);
                         return creditMapper.toEntity(credit)
-                                .flatMap(creditRepository::save)
-                                .thenReturn(entity)
+                                .flatMap(creditEntity -> creditRepository.updateAmountPaidByCreditId(entity.getCreditId(), newAmountPaid)
+                                        .thenReturn(entity))
                                 .onErrorMap(e -> new IllegalArgumentException("Error al actualizar el crédito: " + e.getMessage()));
                     } catch (Exception e) {
                         return Mono.error(new IllegalArgumentException("Error en la validación: " + e.getMessage()));

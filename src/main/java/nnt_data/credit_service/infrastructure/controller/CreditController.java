@@ -2,8 +2,8 @@ package nnt_data.credit_service.infrastructure.controller;
 
 import lombok.RequiredArgsConstructor;
 import nnt_data.credit_service.api.CreditsApi;
-import nnt_data.credit_service.domain.port.CreditOperationsPort;
-import nnt_data.credit_service.domain.port.TransactionOperationsPort;
+import nnt_data.credit_service.application.port.CreditOperationsPort;
+import nnt_data.credit_service.application.port.TransactionOperationsPort;
 import nnt_data.credit_service.model.CreditBase;
 import nnt_data.credit_service.model.Transaction;
 import org.springframework.http.HttpStatus;

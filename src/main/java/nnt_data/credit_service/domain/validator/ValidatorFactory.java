@@ -1,7 +1,7 @@
 package nnt_data.credit_service.domain.validator;
 
 import lombok.RequiredArgsConstructor;
-import nnt_data.credit_service.infrastructure.persistence.model.CreditBaseEntity;
+import nnt_data.credit_service.infrastructure.persistence.entity.CreditBaseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
