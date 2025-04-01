@@ -8,7 +8,15 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
-
+/**
+ * Entidad TransactionEntity que representa una transacción en la base de datos.
+ *
+ * - transactionId: Identificador de la transacción.
+ * - date: Fecha de la transacción.
+ * - type: Tipo de transacción (enum).
+ * - amount: Monto de la transacción.
+ * - creditId: Identificador del crédito asociado.
+ */
 @Data
 @Getter
 @Setter

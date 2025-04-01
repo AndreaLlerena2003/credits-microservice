@@ -6,7 +6,12 @@ import nnt_data.credit_service.model.Transaction;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
+/**
+ * Implementación de TransactionMapper para mapear entre Transaction y TransactionEntity.
+ *
+ * - toEntity: Convierte una Transaction a TransactionEntity utilizando BeanUtils.
+ * - toDomain: Convierte una TransactionEntity a Transaction utilizando BeanUtils.
+ */
 @Component
 @RequiredArgsConstructor
 public class TransactionMapperImpl implements TransactionMapper{

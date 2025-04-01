@@ -4,7 +4,17 @@ import nnt_data.credit_service.infrastructure.persistence.repository.CreditRepos
 import nnt_data.credit_service.model.*;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
+/**
+ * Clase PersonalCreditUpdateStrategy que implementa la estrategia de actualización de créditos personales.
+ *
+ * - updateCredit: Método que actualiza un crédito basado en el tipo de cliente y tipo de crédito.
+ *   - Si el tipo de cliente no es personal, lanza una excepción.
+ *   - Si el tipo de crédito es CREDIT_CARD, establece el crédito disponible si no está definido.
+ *   - Si el tipo de crédito es SIMPLE_CREDIT, devuelve el crédito simple tal como está.
+ *   - Si el tipo de crédito no es soportado para clientes personales, lanza una excepción.
+ *
+ * Utiliza Mono de Reactor para manejar las operaciones de manera reactiva.
+ */
 @Component
 public class PersonalCreditUpdateStrategy implements UpdateCreationStrategy{
 

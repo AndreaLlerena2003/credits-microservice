@@ -3,7 +3,16 @@ package nnt_data.credit_service.application.usecase;
 import nnt_data.credit_service.model.*;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
+/**
+ * Clase BusinessCreditCreationStrategy que implementa la estrategia de creación de créditos empresariales.
+ *
+ * - createCredit: Método que crea un crédito basado en el tipo de cliente y tipo de crédito.
+ *   - Si el tipo de cliente no es empresarial, lanza una excepción.
+ *   - Si el tipo de crédito es CREDIT_CARD, establece el crédito disponible si no está definido.
+ *   - Si el tipo de crédito es SIMPLE_CREDIT, establece el monto pagado a 0.0 si no está definido.
+ *
+ * Utiliza Mono de Reactor para manejar las operaciones de manera reactiva.
+ */
 @Component
 public class BusinessCreditCreationStrategy implements CreditCreationStrategy {
 

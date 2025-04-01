@@ -7,7 +7,13 @@ import nnt_data.credit_service.model.CreditCard;
 import nnt_data.credit_service.model.SimpleCredit;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
+/**
+ * Implementación de CreditMapper para mapear entre CreditBase y CreditBaseEntity.
+ *
+ * - toEntity: Convierte CreditBase a CreditBaseEntity.
+ * - toDomain: Convierte CreditBaseEntity a CreditBase.
+ * - Métodos auxiliares para mapear campos comunes y específicos de tipo.
+ */
 @Component
 @RequiredArgsConstructor
 public class CreditMapperImpl implements CreditMapper {

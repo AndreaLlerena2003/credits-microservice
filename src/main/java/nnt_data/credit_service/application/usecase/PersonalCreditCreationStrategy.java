@@ -4,7 +4,18 @@ import nnt_data.credit_service.infrastructure.persistence.repository.CreditRepos
 import nnt_data.credit_service.model.*;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
+/**
+ * Clase PersonalCreditCreationStrategy que implementa la interfaz CreditCreationStrategy.
+ *
+ * - createCredit: Método que crea un nuevo crédito basado en el tipo de cliente y tipo de crédito.
+ *   - Verifica que el tipo de cliente sea personal (CustomerType.PERSONAL).
+ *   - Si el tipo de crédito es CreditType.CREDIT_CARD, establece el crédito disponible si no está definido.
+ *   - Si el tipo de crédito es CreditType.SIMPLE_CREDIT, establece el monto pagado si no está definido y verifica
+ *     que el cliente no tenga otro crédito simple activo.
+ *   - Devuelve el crédito creado como un Mono<CreditBase> o un error si las condiciones no se cumplen.
+ *
+ * Utiliza Mono de Reactor para manejar la operación de manera reactiva.
+ */
 @Component
 public class PersonalCreditCreationStrategy implements CreditCreationStrategy {
 

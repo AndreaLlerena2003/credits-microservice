@@ -13,7 +13,18 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
+/**
+ * Controlador CreditController que implementa la interfaz CreditsApi.
+ *
+ * - createTransaction: Registra una nueva transacción.
+ * - creditsCreditIdGet: Obtiene un crédito por su ID.
+ * - creditsCreditIdPut: Actualiza un crédito existente.
+ * - creditsGet: Obtiene todos los créditos.
+ * - creditsPost: Crea un nuevo crédito.
+ * - deleteCredit: Elimina un crédito existente.
+ * - getAllTransactions: Obtiene todas las transacciones.
+ * - getTransactionsByCreditId: Obtiene transacciones por ID de crédito.
+ */
 
 @RestController
 @RequiredArgsConstructor
@@ -104,6 +115,27 @@ public class CreditController implements CreditsApi {
                 .defaultIfEmpty(ResponseEntity.badRequest().build());
     }
 
+    /**
+     * DELETE /credits/{creditId} : Elimina un crédito existente
+     *
+     * @param creditId ID del crédito a eliminar (required)
+     * @param exchange
+     * @return Crédito eliminado correctamente (status code 204)
+     * or Crédito no encontrado (status code 404)
+     * or Solicitud incorrecta (status code 400)
+     * or Error interno del servidor (status code 500)
+     */
+    @Override
+    public Mono<ResponseEntity<Void>> deleteCredit(String creditId, ServerWebExchange exchange) {
+        return creditOperationsPort.deleteCredit(creditId)
+                .then(Mono.just(ResponseEntity.noContent().<Void>build()))
+                .onErrorResume(e -> {
+                    if (e.getMessage().contains("no encontrado")) {
+                        return Mono.just(ResponseEntity.notFound().build());
+                    }
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+                });
+    }
     /**
      * GET /credits/transactions : Obtener todas las transacciones
      *

@@ -6,7 +6,21 @@ import nnt_data.credit_service.infrastructure.persistence.repository.CreditRepos
 import nnt_data.credit_service.model.Transaction;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
+/**
+ * Clase CreditTransactionValidator que implementa la validación de transacciones de crédito.
+ *
+ * - validate: Método que valida una transacción basada en el tipo de transacción y el crédito asociado.
+ *   - Si el tipo de transacción es SPENT, valida que haya suficiente crédito disponible.
+ *   - Si el tipo de transacción es PAYMENT, valida que el pago no exceda el límite del crédito.
+ *   - Si el tipo de transacción no es válido, lanza una excepción.
+ *   - Si el crédito no se encuentra, lanza una excepción.
+ *
+ * Métodos privados:
+ * - validateSpentTransaction: Valida y actualiza el crédito disponible para una transacción de gasto.
+ * - validatePaymentTransaction: Valida y actualiza el crédito disponible para una transacción de pago.
+ *
+ * Utiliza Mono de Reactor para manejar las operaciones de manera reactiva.
+ */
 @Component
 @RequiredArgsConstructor
 public class CreditTransactionValidator implements TransactionValidator{

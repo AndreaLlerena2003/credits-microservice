@@ -35,6 +35,25 @@ paths:
                 $ref: '#/components/schemas/CreditBase'
 
   /credits/{creditId}:
+    delete:
+      summary: Elimina un crédito existente
+      operationId: deleteCredit
+      parameters:
+        - name: creditId
+          in: path
+          description: ID del crédito a eliminar
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Crédito eliminado correctamente
+        '404':
+          description: Crédito no encontrado
+        '400':
+          description: Solicitud incorrecta
+        '500':
+          description: Error interno del servidor
     put:
       summary: Actualiza un crédito existente
       parameters:

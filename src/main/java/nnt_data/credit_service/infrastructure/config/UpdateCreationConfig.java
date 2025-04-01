@@ -6,7 +6,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
-
+/**
+ * Configuración de estrategias de actualización de créditos.
+ *
+ * - Define un bean que mapea CustomerType a la estrategia correspondiente.
+ * - Incluye estrategias para clientes personales y empresariales.
+ */
 @Configuration
 public class UpdateCreationConfig {
     @Bean

@@ -11,7 +11,14 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
+/**
+ * Manejador global de excepciones.
+ *
+ * - handleWebExchangeBindException: Maneja excepciones de validación de intercambio web.
+ * - handleIllegalArgumentException: Maneja excepciones de argumentos ilegales.
+ * - handleGenericException: Maneja excepciones genéricas.
+ * - getValidationErrorResponse: Genera respuestas de error de validación.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     private static final String TIMESTAMP = "timestamp";

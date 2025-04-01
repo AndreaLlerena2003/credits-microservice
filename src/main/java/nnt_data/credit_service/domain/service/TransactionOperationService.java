@@ -12,7 +12,24 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
-
+/**
+ * Servicio TransactionOperationService que implementa la interfaz TransactionOperationsPort.
+ *
+ * - createTransaction: Crea una nueva transacción, establece la fecha actual y valida la transacción
+ *   utilizando el validador correspondiente. Guarda la transacción en el repositorio y la convierte
+ *   a su dominio.
+ * - getTransactions: Recupera todas las transacciones del repositorio y las convierte a su dominio.
+ * - getTransactionByCreditId: Recupera las transacciones asociadas a un ID de crédito específico,
+ *   las convierte a su dominio y maneja posibles errores.
+ *
+ * Utiliza Mono y Flux de Reactor para manejar las operaciones de manera reactiva.
+ *
+ * Dependencias:
+ * - transactionMapper: Mapeador para convertir entre entidades y dominios de transacciones.
+ * - validatorFactory: Fábrica de validadores para validar transacciones según el tipo de crédito.
+ * - transactionRepository: Repositorio para operaciones de persistencia de transacciones.
+ * - creditRepository: Repositorio para operaciones de persistencia de créditos.
+ */
 @Service
 @RequiredArgsConstructor
 public class TransactionOperationService implements TransactionOperationsPort {

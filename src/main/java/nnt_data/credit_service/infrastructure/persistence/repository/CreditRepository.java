@@ -5,7 +5,12 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.data.mongodb.repository.Update;
 import reactor.core.publisher.Mono;
-
+/**
+ * Repositorio CreditRepository para operaciones de persistencia de créditos.
+ *
+ * - updateAmountPaidByCreditId: Actualiza el monto pagado de un crédito por su ID.
+ * - updateAvailableAmountByCreditId: Actualiza el crédito disponible de un crédito por su ID.
+ */
 public interface CreditRepository extends ReactiveMongoRepository<CreditBaseEntity, String> {
     @Query("{ 'creditId': ?0 }")
     @Update("{ '$set': { 'amountPaid': ?1 } }")

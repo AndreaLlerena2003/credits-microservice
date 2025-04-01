@@ -12,7 +12,24 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
-
+/**
+ * Servicio CreditOperationsService que implementa la interfaz CreditOperationsPort.
+ *
+ * - createCredit: Crea un nuevo crédito utilizando la estrategia de creación correspondiente.
+ * - updateCredit: Actualiza un crédito existente utilizando la estrategia de actualización correspondiente.
+ * - getByCreditId: Recupera un crédito específico por su ID.
+ * - getAllCredits: Recupera todos los créditos.
+ * - deleteCredit: Elimina un crédito por su ID.
+ *
+ * Utiliza mapas de estrategias de creación y actualización para manejar diferentes tipos de clientes.
+ * Utiliza Mono y Flux de Reactor para manejar las operaciones de manera reactiva.
+ *
+ * Dependencias:
+ * - creationStrategies: Mapa de estrategias de creación de créditos por tipo de cliente.
+ * - updateStrategies: Mapa de estrategias de actualización de créditos por tipo de cliente.
+ * - creditRepository: Repositorio para operaciones de persistencia de créditos.
+ * - creditMapper: Mapeador para convertir entre entidades y dominios de créditos.
+ */
 @Service
 public class CreditOperationsService implements CreditOperationsPort {
 
@@ -49,6 +66,14 @@ public class CreditOperationsService implements CreditOperationsPort {
     public Flux<CreditBase> getAllCredits() {
         return creditRepository.findAll()
                 .flatMap(creditMapper::toDomain);
+    }
+
+    @Override
+    public Mono<Void> deleteCredit(String creditId) {
+        return creditRepository.findById(creditId)
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Crédito con id " + creditId + " no encontrado")))
+                .flatMap(credit -> creditRepository.deleteById(creditId))
+                .then();
     }
 
     public CreditOperationsService(Map<CustomerType, CreditCreationStrategy> creationStrategies,

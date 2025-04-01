@@ -9,7 +9,13 @@ import nnt_data.credit_service.model.SimpleCredit;
 import nnt_data.credit_service.model.Transaction;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
+/**
+ * Validador de transacciones simples.
+ *
+ * - Solo permite transacciones de tipo PAYMENT.
+ * - Verifica que el crédito sea de tipo SIMPLE_CREDIT.
+ * - Actualiza el monto pagado del crédito y valida que no exceda el monto total.
+ */
 @Component
 @RequiredArgsConstructor
 public class SimpleTransactionValidator implements TransactionValidator {
