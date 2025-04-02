@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Controlador CreditController que implementa la interfaz CreditsApi.
@@ -32,6 +34,7 @@ public class CreditController implements CreditsApi {
 
     private final CreditOperationsPort creditOperationsPort;
     private final TransactionOperationsPort transactionOperationsPort;
+    private static final Logger log = LoggerFactory.getLogger(CreditController.class);
 
     /**
      * POST /credits/transactions : Registrar una nueva transacción en la cuenta
@@ -42,6 +45,7 @@ public class CreditController implements CreditsApi {
      */
     @Override
     public Mono<ResponseEntity<Transaction>> createTransaction(Mono<Transaction> transaction, ServerWebExchange exchange) {
+        log.info("Iniciando creación de nueva transacción");
         return transaction
                 .flatMap(transactionOperationsPort::createTransaction)
                 .map(result -> ResponseEntity
@@ -58,6 +62,7 @@ public class CreditController implements CreditsApi {
      */
     @Override
     public Mono<ResponseEntity<CreditBase>> creditsCreditIdGet(String creditId, ServerWebExchange exchange) {
+        log.info("Buscando crédito con ID: {}", creditId);
         return creditOperationsPort.getByCreditId(creditId)
                 .map(credit -> ResponseEntity.ok().body(credit))
                 .onErrorResume(IllegalArgumentException.class,
@@ -74,6 +79,7 @@ public class CreditController implements CreditsApi {
      */
     @Override
     public Mono<ResponseEntity<CreditBase>> creditsCreditIdPut(String creditId, Mono<CreditBase> creditBase, ServerWebExchange exchange) {
+        log.info("Iniciando actualización de crédito con ID: {}", creditId);
         return creditBase
                 .map(credit -> {
                     credit.setCreditId(creditId);
@@ -94,6 +100,7 @@ public class CreditController implements CreditsApi {
      */
     @Override
     public Mono<ResponseEntity<Flux<CreditBase>>> creditsGet(ServerWebExchange exchange) {
+        log.info("Obteniendo todos los créditos");
         Flux<CreditBase> credits = creditOperationsPort.getAllCredits();
         return Mono.just(ResponseEntity.ok().body(credits));
     }
@@ -107,6 +114,7 @@ public class CreditController implements CreditsApi {
      */
     @Override
     public Mono<ResponseEntity<CreditBase>> creditsPost(Mono<CreditBase> creditBase, ServerWebExchange exchange) {
+        log.info("Iniciando creación de nuevo crédito");
         return creditBase
                 .flatMap(creditOperationsPort::createCredit)
                 .map(credit -> ResponseEntity
@@ -127,6 +135,7 @@ public class CreditController implements CreditsApi {
      */
     @Override
     public Mono<ResponseEntity<Void>> deleteCredit(String creditId, ServerWebExchange exchange) {
+        log.info("Iniciando eliminación de crédito con ID: {}", creditId);
         return creditOperationsPort.deleteCredit(creditId)
                 .then(Mono.just(ResponseEntity.noContent().<Void>build()))
                 .onErrorResume(e -> {
@@ -144,6 +153,7 @@ public class CreditController implements CreditsApi {
      */
     @Override
     public Mono<ResponseEntity<Flux<Transaction>>> getAllTransactions(ServerWebExchange exchange) {
+        log.info("Obteniendo todas las transacciones");
         Flux<Transaction> transactions = transactionOperationsPort.getTransactions();
         return Mono.just(ResponseEntity.ok().body(transactions));
     }
@@ -161,7 +171,9 @@ public class CreditController implements CreditsApi {
      */
     @Override
     public Mono<ResponseEntity<Flux<Transaction>>> getTransactionsByCreditId(String creditId, ServerWebExchange exchange) {
-        Flux<Transaction> transactions = transactionOperationsPort.getTransactionByCreditId(creditId);
+        log.info("Obteniendo transacciones para el crédito con ID: {}", creditId);
+
+                Flux<Transaction> transactions = transactionOperationsPort.getTransactionByCreditId(creditId);
         return Mono.just(ResponseEntity.ok().body(transactions))
                 .onErrorResume(e -> {
                     return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).<Flux<Transaction>>build());
