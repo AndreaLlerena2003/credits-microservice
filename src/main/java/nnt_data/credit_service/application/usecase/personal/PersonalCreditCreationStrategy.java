@@ -1,5 +1,6 @@
-package nnt_data.credit_service.application.usecase;
+package nnt_data.credit_service.application.usecase.personal;
 
+import nnt_data.credit_service.application.usecase.CreditCreationStrategy;
 import nnt_data.credit_service.infrastructure.persistence.repository.CreditRepository;
 import nnt_data.credit_service.model.*;
 import org.springframework.stereotype.Component;

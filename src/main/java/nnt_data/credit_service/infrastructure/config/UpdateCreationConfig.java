@@ -1,6 +1,8 @@
 package nnt_data.credit_service.infrastructure.config;
 
 import nnt_data.credit_service.application.usecase.*;
+import nnt_data.credit_service.application.usecase.business.BusinessCreditUpdateStrategy;
+import nnt_data.credit_service.application.usecase.personal.PersonalCreditUpdateStrategy;
 import nnt_data.credit_service.model.CustomerType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

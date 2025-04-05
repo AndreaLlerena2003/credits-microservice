@@ -149,6 +149,40 @@ paths:
         '500':
           description: Error interno del servidor
 
+  /credits/{customerId}:
+    get:
+      summary: Verifica si el cliente tiene créditos
+      operationId: hasCredits
+      parameters:
+        - name: customerId
+          in: path
+          description: ID del cliente para verificar si tiene créditos
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Indica si el cliente tiene créditos
+          content:
+            application/json:
+              schema:
+                type: boolean
+                example: true
+        '400':
+          description: Solicitud inválida
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "ID de cliente inválido"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Error al procesar la solicitud"
+
 components:
   schemas:
     Transaction:

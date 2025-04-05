@@ -1,5 +1,6 @@
-package nnt_data.credit_service.application.usecase;
+package nnt_data.credit_service.application.usecase.personal;
 
+import nnt_data.credit_service.application.usecase.UpdateCreationStrategy;
 import nnt_data.credit_service.infrastructure.persistence.repository.CreditRepository;
 import nnt_data.credit_service.model.*;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import reactor.core.publisher.Mono;
  * Utiliza Mono de Reactor para manejar las operaciones de manera reactiva.
  */
 @Component
-public class PersonalCreditUpdateStrategy implements UpdateCreationStrategy{
+public class PersonalCreditUpdateStrategy implements UpdateCreationStrategy {
 
     private final CreditRepository creditRepository;
 

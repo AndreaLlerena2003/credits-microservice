@@ -16,8 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Controlador CreditController que implementa la interfaz CreditsApi.
- *
+ * Controlador CreditController que implementa la interfaz CreditsApi.*
  * - createTransaction: Registra una nueva transacción.
  * - creditsCreditIdGet: Obtiene un crédito por su ID.
  * - creditsCreditIdPut: Actualiza un crédito existente.
@@ -159,6 +158,18 @@ public class CreditController implements CreditsApi {
     }
 
     /**
+     * GET /credits/{customerId} : Obtiene todos los créditos de un cliente
+     *
+     * @param customerId ID del cliente del cual se desean obtener los créditos (required)
+     * @param exchange
+     * @return Lista de créditos encontrados exitosamente (status code 200)
+     * or No se encontraron créditos para el cliente especificado (status code 404)
+     * or Solicitud inválida (status code 400)
+     * or Error interno del servidor (status code 500)
+     */
+
+
+    /**
      * GET /credits/{creditId}/transactions : Obtener transacciones por ID de crédito
      * Recupera todas las transacciones asociadas a un crédito específico
      *
@@ -173,12 +184,22 @@ public class CreditController implements CreditsApi {
     public Mono<ResponseEntity<Flux<Transaction>>> getTransactionsByCreditId(String creditId, ServerWebExchange exchange) {
         log.info("Obteniendo transacciones para el crédito con ID: {}", creditId);
 
-                Flux<Transaction> transactions = transactionOperationsPort.getTransactionByCreditId(creditId);
+        Flux<Transaction> transactions = transactionOperationsPort.getTransactionByCreditId(creditId);
         return Mono.just(ResponseEntity.ok().body(transactions))
-                .onErrorResume(e -> {
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).<Flux<Transaction>>build());
-                });
+                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).<Flux<Transaction>>build()));
     }
-
-
+    /**
+     * GET /credits/{customerId} : Verifica si el cliente tiene créditos
+     *
+     * @param customerId ID del cliente para verificar si tiene créditos (required)
+     * @param exchange
+     * @return Indica si el cliente tiene créditos (status code 200)
+     * or Solicitud inválida (status code 400)
+     * or Error interno del servidor (status code 500)
+     */
+    @Override
+    public Mono<ResponseEntity<Boolean>> hasCredits(String customerId, ServerWebExchange exchange) {
+        return creditOperationsPort.hasCreditCard(customerId)
+                .map(ResponseEntity::ok);
+    }
 }

@@ -20,4 +20,5 @@ public interface CreditOperationsPort {
     Mono<CreditBase> getByCreditId(String creditId);
     Flux<CreditBase> getAllCredits();
     Mono<Void> deleteCredit(String creditId);
+    Mono<Boolean> hasCreditCard(String customerId);
 }

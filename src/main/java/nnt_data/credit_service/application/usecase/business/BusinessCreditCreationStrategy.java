@@ -1,5 +1,6 @@
-package nnt_data.credit_service.application.usecase;
+package nnt_data.credit_service.application.usecase.business;
 
+import nnt_data.credit_service.application.usecase.CreditCreationStrategy;
 import nnt_data.credit_service.model.*;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
