@@ -107,6 +107,43 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.10</version>
+				<configuration>
+					<excludes>
+						<exclude>**/api/**</exclude>
+						<exclude>**/entity/**</exclude>
+						<exclude>**/model/**</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<configLocation>src/main/resources/checkstyle.xml</configLocation>
+					<consoleOutput>true</consoleOutput>
+					<failsOnError>true</failsOnError>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -123,7 +160,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>nnt_data.credit_service.CreditServiceApplication</mainClass>
+					<mainClass>nnt_data.credits_microservice.CreditServiceApplication</mainClass>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -152,9 +189,9 @@
 								<supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
 							</configOptions>
 
-							<packageName>nnt_data.credit_service</packageName>
-							<apiPackage>nnt_data.credit_service.api</apiPackage>
-							<modelPackage>nnt_data.credit_service.model</modelPackage>
+							<packageName>nnt_data.credits_microservice</packageName>
+							<apiPackage>nnt_data.credits_microservice.api</apiPackage>
+							<modelPackage>nnt_data.credits_microservice.model</modelPackage>
 						</configuration>
 					</execution>
 				</executions>
