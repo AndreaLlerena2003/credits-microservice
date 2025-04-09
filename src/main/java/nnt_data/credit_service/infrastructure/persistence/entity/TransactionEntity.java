@@ -18,8 +18,6 @@ import java.util.Date;
  * - creditId: Identificador del crédito asociado.
  */
 @Data
-@Getter
-@Setter
 @Document(collection = "credit_transaction")
 public class TransactionEntity {
     @Id

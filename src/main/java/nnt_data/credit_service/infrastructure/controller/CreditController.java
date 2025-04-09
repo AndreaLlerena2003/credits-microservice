@@ -188,8 +188,9 @@ public class CreditController implements CreditsApi {
         return Mono.just(ResponseEntity.ok().body(transactions))
                 .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).<Flux<Transaction>>build()));
     }
+
     /**
-     * GET /credits/{customerId} : Verifica si el cliente tiene créditos
+     * GET /credits/customer/{customerId} : Verifica si el cliente tiene créditos
      *
      * @param customerId ID del cliente para verificar si tiene créditos (required)
      * @param exchange
@@ -202,4 +203,5 @@ public class CreditController implements CreditsApi {
         return creditOperationsPort.hasCreditCard(customerId)
                 .map(ResponseEntity::ok);
     }
+
 }

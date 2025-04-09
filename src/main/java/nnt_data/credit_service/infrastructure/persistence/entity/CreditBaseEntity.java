@@ -21,8 +21,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 
 @Data
-@Getter
-@Setter
 @Document(collection = "credits")
 public class CreditBaseEntity {
     @Id
