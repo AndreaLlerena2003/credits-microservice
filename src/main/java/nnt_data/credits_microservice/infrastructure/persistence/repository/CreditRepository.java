@@ -21,4 +21,7 @@ public interface CreditRepository extends ReactiveMongoRepository<CreditBaseEnti
     Mono<Void> updateAvilableAmountByCreditId(String creditId, Double availableAmount);
 
     Flux<CreditBaseEntity> findByCustomerId(String customerId);
+
+    Mono<Object> findByCardNumber(String cardNumber);
+    Mono<CreditBaseEntity> findByCreditId(String creditId);
 }

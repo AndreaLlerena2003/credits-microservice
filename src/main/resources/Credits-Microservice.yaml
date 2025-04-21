@@ -183,8 +183,153 @@ paths:
                 type: string
                 example: "Error al procesar la solicitud"
 
+
+
+  /reporting/salarySummaryForPeriod:
+    post:
+      summary: reporte
+      operationId: postSalarySummaryForPeriod
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - creditId
+                - startDate
+                - endDate
+              properties:
+                creditId:
+                  type: string
+                  description: ID de la cuenta
+                startDate:
+                  type: string
+                  format: date-time
+                  description: Fecha de inicio del periodo
+                endDate:
+                  type: string
+                  format: date-time
+                  description: Fecha de fin del periodo
+      responses:
+        '200':
+          description: Resumen del usuario especificado
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+
+  /reporting/salarySummary/{customerId}:
+    get:
+      summary: Obtener el reporte de salarios promedios para un cliente
+      operationId: getSummarySalaryByCustomerId
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: ID del usuario
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Resumen del usuario especificado
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+
+
+  /reporting/{creditId}/transactions:
+      get:
+        summary: Obtiene los últimos 10 movimientos de una tarjeta de credito
+        description: Devuelve un reporte con las últimas 10 transacciones realizadas con la tarjeta de credito especificada
+        operationId: getLastTenTransactions
+        parameters:
+          - name: creditId
+            in: path
+            description: Número de la tarjeta de débito
+            required: true
+            schema:
+              type: string
+        responses:
+          '200':
+            description: Reporte de transacciones generado exitosamente
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/TransactionReport'
+          '400':
+            description: Número de tarjeta inválido o no encontrado
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+          '500':
+            description: Error interno del servidor
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+
 components:
   schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          example: "El campo accountType es requerido"
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+
+    TransactionReport:
+      type: object
+      description: Reporte de transacciones de una tarjeta de débito
+      properties:
+        cardNumber:
+          type: string
+          description: Número de la tarjeta de débito
+          example: "4539123456789012"
+        generationDate:
+          type: string
+          format: date-time
+          description: Fecha y hora de generación del reporte
+          example: "2025-04-14T14:30:45"
+        transactions:
+          type: array
+          description: Lista de transacciones incluidas en el reporte
+          items:
+            $ref: '#/components/schemas/Transaction'
+        transactionCount:
+          type: integer
+          description: Número total de transacciones en el reporte
+          example: 10
+        oldestTransactionDate:
+          type: string
+          format: date-time
+          description: Fecha de la transacción más antigua en el reporte
+          example: "2025-03-15T09:23:11"
+        newestTransactionDate:
+          type: string
+          format: date-time
+          description: Fecha de la transacción más reciente en el reporte
+          example: "2025-04-13T18:45:22"
+
     Transaction:
       type: object
       required:
@@ -268,3 +413,19 @@ components:
               type: number
               format: double
               description: Monto pagado del crédito
+
+    CreditResume:
+      type: object
+      required:
+        - creditId
+        - creditType
+        - averageBalance
+      properties:
+        creditId:
+          type: string
+        creditType:
+          $ref: '#/components/schemas/CreditType'
+        averageBalance:
+          type: number
+          format: double
+          example: 1500.75
